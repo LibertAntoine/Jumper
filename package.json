@@ -5,21 +5,37 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "build_py": "pyinstaller -F py/test.py --distpath src-tauri/bin/python --clean -n test-x86_64-pc-windows-msvc",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "tauri": "tauri"
   },
   "dependencies": {
+    "@bithero/monaco-editor-vite-plugin": "^1.0.2",
+    "@tanstack/vue-query": "^5.66.0",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
+    "@tauri-apps/plugin-shell": "^2.2.0",
+    "@vee-validate/zod": "^4.15.0",
+    "@vueuse/core": "^12.7.0",
+    "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-vue-next": "^0.473.0",
+    "monaco-editor": "^0.52.2",
+    "monaco-editor-vue3": "^0.1.10",
+    "pinia": "^2.3.0",
+    "prettier-plugin-classnames": "^0.7.5",
+    "prettier-plugin-merge": "^0.7.2",
+    "prettier-plugin-tailwindcss": "^0.6.10",
     "radix-vue": "^1.9.12",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "url": "^0.11.4",
-    "vue": "^3.5.13"
+    "vee-validate": "^4.15.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.0",
@@ -30,6 +46,8 @@
     "tailwindcss": "^3.4.17",
     "typescript": "~5.6.2",
     "vite": "^6.0.3",
+    "vite-plugin-monaco-editor": "^1.1.0",
+    "vite-svg-loader": "^5.1.0",
     "vue-tsc": "^2.1.10"
   }
 }
