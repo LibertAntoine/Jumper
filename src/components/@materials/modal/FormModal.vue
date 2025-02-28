@@ -1,45 +1,52 @@
 <template>
-  <Dialog v-model:open="open" class="pt-[32px]" :modal="false">
+  <Dialog v-model:open="open" :modal="false">
     <DialogTrigger v-if="$slots.trigger">
       <slot name="trigger" />
     </DialogTrigger>
     <DialogContent
       to="#main"
+      class="mt-[15px] flex max-h-[80%] w-11/12 max-w-[600px] flex-col gap-3 dark:bg-slate-900"
       :disable-outside-pointer-events="false"
       :trap-focus="false"
       @interact-outside.prevent
     >
       <DialogHeader>
         <slot name="header">
-          <DialogTitle
-            ><h2 class="text-2xl font-semibold">{{ title }}</h2></DialogTitle
-          >
-          <DialogDescription v-if="description">
-            <p class="text-slate">{{ description }}</p>
+          <DialogTitle class="text-2xl font-semibold dark:text-slate-200">{{ title }}</DialogTitle>
+          <DialogDescription v-if="description" class="text-slate-500">
+            {{ description }}
           </DialogDescription>
         </slot>
       </DialogHeader>
-      <form id="dialogForm" class="overflow-y-auto" @submit="onSubmit">
+      <form
+        id="dialogForm"
+        class="overflow-y-auto px-1 pr-2"
+        @submit.prevent="onSubmit"
+      >
         <slot />
       </form>
-      <DialogFooter class="">
+      <DialogFooter>
         <DialogClose as-child>
-          <Button
-            variant="secondary"
-            size="lg"
-            class="flex items-center gap-3 self-end"
-          >
+          <Button variant="secondary">
             Cancel
           </Button>
         </DialogClose>
         <Button
-          size="lg"
-          class="flex min-w-[70px] items-center gap-3 self-end"
+          class="flex min-w-[70px] items-center gap-1"
           type="submit"
           form="dialogForm"
-          :disabled="form.isSubmitting"
+          :disabled="
+            form.isSubmitting.value ||
+            !form.meta.value.valid ||
+            !form.meta.value.dirty
+          "
         >
-          <Loader2 v-if="form.isSubmitting" :size="20" class="animate-spin" />
+          <Save class="h-6 w-6" />
+          <Loader2
+            v-if="form.isSubmitting.value"
+            :size="20"
+            class="animate-spin"
+          />
           <p v-else>{{ submitButtonName || 'Save' }}</p>
         </Button>
       </DialogFooter>
@@ -48,9 +55,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useForm } from 'vee-validate'
-import { Loader2 } from 'lucide-vue-next'
+import { Loader2, Save } from 'lucide-vue-next'
 import { Button } from '@@materials/ui/button'
 import {
   Dialog,
@@ -63,17 +69,19 @@ import {
   DialogContent
 } from '@@materials/ui/dialog'
 
-const open = ref(false)
+const open = defineModel<boolean>('open')
 
 const props = defineProps<{
   title: string
   form: ReturnType<typeof useForm>
-  onSubmit: () => Promise<boolean>
+  onSubmit: () => Promise<Promise<boolean> | undefined>
   description?: string
   submitButtonName?: string
 }>()
 
 const onSubmit = async () => {
-  open.value = await props.onSubmit()
+  if (!props.onSubmit) return
+  const result = await props.onSubmit()
+  if (result) open.value = false
 }
 </script>

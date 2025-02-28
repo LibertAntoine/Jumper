@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import jumper from '@/services/jumper'
 import { usePermissions } from './permissions'
 import type { User } from '@@types'
-import { useQuery } from '@/composables/useQuery'
+import { useQuery } from '@/composables/query/useQuery'
 
 export const useAuthUserStore = defineStore('authUser', () => {
   const query = useQuery(['authUser'], fetchUser)
@@ -45,7 +45,7 @@ export const useAuthUserStore = defineStore('authUser', () => {
 
   const update = async (data: Partial<User>) => {
     if (!user.value) throw new Error('User not found')
-    const newUser = await jumper.users.updateUser(user.value.id, data)
+    const newUser = await jumper.users.update(user.value.id, data)
     if (!newUser) return
     setUser((old) => {
       if (!old) return null
@@ -63,7 +63,7 @@ export const useAuthUserStore = defineStore('authUser', () => {
 
   const updateProfilePicture = async (file: File) => {
     if (!user.value) throw new Error('User not found')
-    const result = await jumper.users.updateUserProfilePicture(user.value.id, file)
+    const result = await jumper.users.updateProfilePicture(user.value.id, file)
     setUser((old) => {
       if (!old) return undefined
       return { ...old, profilePictureUrl: result.profilePictureUrl }

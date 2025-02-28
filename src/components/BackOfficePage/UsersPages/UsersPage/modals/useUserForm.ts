@@ -15,7 +15,7 @@ export const useUserForm = (user?: User): ReturnType<typeof useForm> => {
     z.object({
       username: z
         .string()
-        .min(2)
+        .min(4)
         .max(40)
         .refine(async (username) => await checkUniqueUsername(user, username), {
           message: 'This username is already taken'
@@ -31,7 +31,7 @@ export const useUserForm = (user?: User): ReturnType<typeof useForm> => {
         : passwordSchema,
       firstName: z.string().min(2).max(20).optional().or(z.literal('')),
       lastName: z.string().min(2).max(20).optional().or(z.literal('')),
-      isSuperAdmin: user
+      isSuperuser: user
         ? z
             .boolean()
             .refine(

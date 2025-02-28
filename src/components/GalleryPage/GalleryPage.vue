@@ -1,11 +1,13 @@
 <template>
-  <div class="flex flex-wrap p-4 gap-4 justify-center">
-    <GalleryItem
-      class="h-[150px] w-[130px]"
-      v-for="item in items"
-      :key="item.id"
-      :item="item"
-    />
+  <div class="h-full overflow-auto">
+    <div class="flex flex-wrap justify-center gap-4 p-4">
+      <GalleryItem
+        class="h-[150px] w-[130px]"
+        v-for="item in items"
+        :key="item.id"
+        :item="item"
+      />
+    </div>
   </div>
 </template>
 

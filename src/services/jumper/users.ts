@@ -10,27 +10,34 @@ export const getAuthUser = async () => {
   return response.data
 }
 
-export const getUsers = async (page: number = 1, limit: number = 50) => {
+export const getUsers = async (params: {
+  page?: number
+  limit?: number
+  active?: boolean
+  search?: string
+  ordering?: string
+}) => {
+  const { page = 1, limit = 25, active, search, ordering } = params
   const response = await jumperClient.get<Page<User>>('/users', {
-    params: { page, limit }
+    params: { page, limit, is_active: active, search, ordering }
   })
   if (response.status !== 200) throw new JumperBackendError(response)
   return response.data
 }
 
-export const createUser = async (user: Partial<User>) => {
+export const create = async (user: Partial<User>) => {
   const response = await jumperClient.post<User>('/users', user)
   if (response.status !== 201) throw new JumperBackendError(response)
   return response.data
 }
 
-export const updateUser = async (userId: User['id'], user: Partial<User>) => {
+export const update = async (userId: User['id'], user: Partial<User>) => {
   const response = await jumperClient.patch<User>(`/users/${userId}`, user)
   if (response.status !== 200) throw new JumperBackendError(response)
   return response.data
 }
 
-export const updateUserProfilePicture = async (id: User['id'], data: File) => {
+export const updateProfilePicture = async (id: User['id'], data: File) => {
   const formData = new FormData()
   formData.append('profile_picture', data)
   const response = await jumperClient.put<{
@@ -44,7 +51,7 @@ export const updateUserProfilePicture = async (id: User['id'], data: File) => {
   return response.data
 }
 
-export const deleteUser = async (userId: User['id']) => {
+export const remove = async (userId: User['id']) => {
   const response = await jumperClient.delete(`/users/${userId}`)
   if (response.status !== 204) throw new JumperBackendError(response)
 }
@@ -85,4 +92,3 @@ export const isLastAdmin = async (userId: User['id']): Promise<boolean> => {
   }
   return response.data
 }
-

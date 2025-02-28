@@ -10,6 +10,7 @@ export const useConfirmToast = async <T>(
   const { toast } = useToast()
   try {
     const result = await func()
+    console.log('result', result)
     if (options.successTitle) {
       toast({
         title: options.successTitle

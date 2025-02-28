@@ -6,7 +6,7 @@
       dark:bg-slate-900"
   >
     <img
-      class="ml-[2px] mt-[1px] w-[23px]"
+      class="ml-[2px] mt-[1px] w-[23px] pointer-events-none"
       src="@/assets/jumper-logo.png"
       alt="Jumper Logo"
     />

@@ -5,6 +5,7 @@
     <p>{{ errorMessage }}</p>
   </TableCaption>
   <TableCaption v-else-if="!isLoading && !data?.length"
+    class="text-lg font-semibold italic text-slate-400 pt-4"
     >No {{ itemName || 'item' }} found</TableCaption
   >
 </template>

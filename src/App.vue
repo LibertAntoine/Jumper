@@ -10,9 +10,9 @@ const mode = useColorMode({ disableTransition: false })
 
 <template>
   <div class="h-screen overflow-hidden">
-    <TitleBar/>
-    <main id="main" class="mt-[32px] h-[calc(100%-32px)] overflow-auto">
-      <RouterView/>
+    <TitleBar />
+    <main id="main" class="mt-[32px] h-[calc(100%-32px)]">
+      <RouterView />
     </main>
   </div>
   <Toaster />

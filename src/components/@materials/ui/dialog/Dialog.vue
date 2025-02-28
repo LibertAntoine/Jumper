@@ -7,11 +7,10 @@ const emits = defineEmits<DialogRootEmits>()
 
 const forwarded = useForwardPropsEmits(props, emits)
 
-console.log(forwarded.value)
 </script>
 
 <template>
-  <DialogRoot v-bind="forwarded">
+  <DialogRoot v-bind="forwarded" :modal="false">
     <div
       v-if="forwarded.open == true"
       :data-state="forwarded.open ? 'open' : 'closed'"

@@ -23,4 +23,22 @@ export type Group = {
   readonly id: number
   name: string
   userSet: User['id'][]
+  isAdminGroup: boolean
 }
+
+export type Role = {
+  readonly id: number
+  name: string
+  description: string
+  users: User['id'][]
+  groups: Group['id'][]
+  creationDate: string
+  lastUpdate: string
+  createdBy: User['id']
+}
+
+export type DetailedRole = Omit<Role, 'users' | 'groups'> & {
+  users: User[]
+  groups: Group[]
+}
+

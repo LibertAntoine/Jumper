@@ -69,7 +69,7 @@ const router = createRouter({
               name: 'groups',
               component: () =>
                 import(
-                  '@/components/BackOfficePage/UsersPages/GroupsPage.vue'
+                  '@/components/BackOfficePage/UsersPages/GroupsPage/GroupsPage.vue'
                 )
             },
             {
@@ -77,19 +77,13 @@ const router = createRouter({
               name: 'roles',
               component: () =>
                 import(
-                  '@/components/BackOfficePage/UsersPages/RolesPage.vue'
+                  '@/components/BackOfficePage/UsersPages/RolesPage/RolesPage.vue'
                 )
             }
           ]
         }
       ]
     }
-
-    // {
-    //   path: '/',
-    //   name: 'actions',
-    //   component: ActionPage
-    // },
   ]
 })
 

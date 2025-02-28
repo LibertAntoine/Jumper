@@ -1,7 +1,7 @@
 import jumper from '@/services/jumper'
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useQuery } from '@/composables/useQuery'
+import { useQuery } from '@/composables/query/useQuery'
 
 export const useAuthConfigStore = defineStore('authConfig', () => {
   const query = useQuery(['authConfig'], jumper.auth.getConfig)
@@ -31,6 +31,7 @@ export const useAuthConfigStore = defineStore('authConfig', () => {
       return (authUrl) ? `http://localhost:8000/${authUrl}` : null
     }
   )
+  const isSSOEnabled = computed(() => isOidcEnabled.value || isScimEnabled.value)
 
   return {
     configState,
@@ -38,6 +39,7 @@ export const useAuthConfigStore = defineStore('authConfig', () => {
     isFetching,
     errorMessage,
     isScimEnabled,
+    isSSOEnabled,
     isOidcEnabled,
     isEmailEnabled,
     ssoDiplayName,
