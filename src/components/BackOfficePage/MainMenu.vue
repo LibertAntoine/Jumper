@@ -110,7 +110,7 @@ import {
 
 const authUserStore = useAuthUserStore()
 const authConfigStore = useAuthConfigStore()
-console.log(authConfigStore.isScimEnabled)
+
 const menuItems = [
   {
     title: 'My account',
