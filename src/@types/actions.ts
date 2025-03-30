@@ -1,5 +1,7 @@
 import type { User, Group } from './user'
 
+export const ACTION_TYPES = ['Python', 'Link'] as const
+
 export type Action = {
     id: number
     name: string
@@ -15,12 +17,12 @@ export type PlayableAction = Action & {
     data: ActionData
 }
 
-export type DetailedAction = {
+export type DetailedAction = Action & {
+    data: ActionData
     createBy: User
     users: User[]
     groups: Group[]
 }
-
 
 export type ActionData = PythonActionData | LinkActionData
 

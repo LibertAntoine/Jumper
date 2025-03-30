@@ -1,18 +1,21 @@
 <template>
   <Dialog v-model:open="open" :modal="false">
-    <DialogTrigger v-if="$slots.trigger">
+    <DialogTrigger v-if="$slots.trigger" :class="props.class">
       <slot name="trigger" />
     </DialogTrigger>
     <DialogContent
       to="#main"
-      class="mt-[15px] flex max-h-[80%] w-11/12 max-w-[600px] flex-col gap-3 dark:bg-slate-900"
+      class="mt-[15px] flex max-h-[80%] w-11/12 max-w-[600px] flex-col gap-3
+        dark:bg-slate-900"
       :disable-outside-pointer-events="false"
       :trap-focus="false"
       @interact-outside.prevent
     >
       <DialogHeader>
         <slot name="header">
-          <DialogTitle class="text-2xl font-semibold dark:text-slate-200">{{ title }}</DialogTitle>
+          <DialogTitle class="text-2xl font-semibold dark:text-slate-200">{{
+            title
+          }}</DialogTitle>
           <DialogDescription v-if="description" class="text-slate-500">
             {{ description }}
           </DialogDescription>
@@ -27,9 +30,7 @@
       </form>
       <DialogFooter>
         <DialogClose as-child>
-          <Button variant="secondary">
-            Cancel
-          </Button>
+          <Button variant="secondary"> Cancel </Button>
         </DialogClose>
         <Button
           class="flex min-w-[70px] items-center gap-1"
@@ -55,6 +56,7 @@
 </template>
 
 <script setup lang="ts">
+import { HTMLAttributes } from 'vue'
 import { useForm } from 'vee-validate'
 import { Loader2, Save } from 'lucide-vue-next'
 import { Button } from '@@materials/ui/button'
@@ -77,6 +79,7 @@ const props = defineProps<{
   onSubmit: () => Promise<Promise<boolean> | undefined>
   description?: string
   submitButtonName?: string
+  class?: HTMLAttributes['class']
 }>()
 
 const onSubmit = async () => {

@@ -20,3 +20,25 @@ export const getActions = async (params: {
   if (response.status !== 200) throw new JumperBackendError(response)
   return response.data
 }
+
+export const create = async (action: Partial<Action>) => {
+  const response = await jumperClient.post<Action>('/actions', action)
+  if (response.status !== 201) throw new JumperBackendError(response)
+  return response.data
+}
+
+export const update = async (
+  actionId: Action['id'],
+  action: Partial<Action>,
+  params: {
+    detailed?: boolean
+  } = {}
+) => {
+  const response = await jumperClient.patch<Action>(
+    `/actions/${actionId}`,
+    action,
+    { params }
+  )
+  if (response.status !== 200) throw new JumperBackendError(response)
+  return response.data
+}

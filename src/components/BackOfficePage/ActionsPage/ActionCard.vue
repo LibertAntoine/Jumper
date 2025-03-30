@@ -16,7 +16,7 @@
     </div>
     <p
       v-if="action.description"
-      class="line-clamp-2 truncate text-xs italic text-slate-500 dark:text-slate-600"
+      class="line-clamp-2 truncate text-start text-xs italic text-slate-500 dark:text-slate-600"
     >
       {{ action.description }}
     </p>
