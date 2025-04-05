@@ -21,6 +21,14 @@ export const getActions = async (params: {
   return response.data
 }
 
+export const getDetailedAction = (async (actionId: Action['id']) => {
+  const response = await jumperClient.get<DetailedAction>(`/actions/${actionId}`, {
+    params: { detailed: true }
+  })
+  if (response.status !== 200) throw new JumperBackendError(response)
+  return response.data
+})
+
 export const create = async (action: Partial<Action>) => {
   const response = await jumperClient.post<Action>('/actions', action)
   if (response.status !== 201) throw new JumperBackendError(response)
