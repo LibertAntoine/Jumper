@@ -7,7 +7,10 @@
       <FormControl>
         <Textarea
           class="placeholder:text-sm"
-          v-bind="componentField"
+          v-bind="{
+            ...componentField,
+            ...$attrs,
+          }"
           :placeholder="placeholder"
           :class="cn('w-full', props.class)"
           :disabled="disabled"
@@ -38,8 +41,8 @@ import {
 
 const props = withDefaults(
   defineProps<{
-    label: string
     fieldName: string
+    label?: string
     placeholder?: string
     class?: string
     showErrorMessage?: boolean

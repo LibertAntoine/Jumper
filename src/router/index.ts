@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import GalleryPage from '@/components/GalleryPage/GalleryPage.vue'
 import BackOfficePage from '@/components/BackOfficePage/BackOfficePage.vue'
 import LoginPage from '@/components/LoginPage.vue'
+import DebugPage from '@/components/DebugPage/DebugPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -83,7 +84,12 @@ const router = createRouter({
           ]
         }
       ]
-    }
+    },
+    {
+      path: '/debug',
+      name: 'debug',
+      component: DebugPage,
+    },
   ]
 })
 

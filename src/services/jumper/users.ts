@@ -2,7 +2,7 @@ import type { User, DetailedUser, Group, Page } from '@@types'
 import { jumperClient, JumperBackendError } from '@/services/jumper/client'
 
 export const getAuthUser = async () => {
-  const response = await jumperClient.get<DetailedUser>('/users/me')
+  const response = await jumperClient.get<DetailedUser>('/v1/users/me')
   if (response.status !== 200) {
     console.error('Failed to fetch auth user', response)
     return null
@@ -18,7 +18,7 @@ export const getUsers = async (params: {
   ordering?: string
 }) => {
   const { page = 1, limit = 25, active, search, ordering } = params
-  const response = await jumperClient.get<Page<User>>('/users', {
+  const response = await jumperClient.get<Page<User>>('/v1/users', {
     params: { page, limit, is_active: active, search, ordering }
   })
   if (response.status !== 200) throw new JumperBackendError(response)
@@ -26,13 +26,13 @@ export const getUsers = async (params: {
 }
 
 export const create = async (user: Partial<User>) => {
-  const response = await jumperClient.post<User>('/users', user)
+  const response = await jumperClient.post<User>('/v1/users', user)
   if (response.status !== 201) throw new JumperBackendError(response)
   return response.data
 }
 
 export const update = async (userId: User['id'], user: Partial<User>) => {
-  const response = await jumperClient.patch<User>(`/users/${userId}`, user)
+  const response = await jumperClient.patch<User>(`/v1/users/${userId}`, user)
   if (response.status !== 200) throw new JumperBackendError(response)
   return response.data
 }
@@ -42,7 +42,7 @@ export const updateProfilePicture = async (id: User['id'], data: File) => {
   formData.append('profile_picture', data)
   const response = await jumperClient.put<{
     profilePictureUrl: User['profilePictureUrl']
-  }>(`/users/${id}/profile`, formData, {
+  }>(`/v1/users/${id}/profile`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
@@ -52,12 +52,12 @@ export const updateProfilePicture = async (id: User['id'], data: File) => {
 }
 
 export const remove = async (userId: User['id']) => {
-  const response = await jumperClient.delete(`/users/${userId}`)
+  const response = await jumperClient.delete(`/v1/users/${userId}`)
   if (response.status !== 204) throw new JumperBackendError(response)
 }
 
 export const getGroups = async () => {
-  const response = await jumperClient.get<Group[]>('/groups')
+  const response = await jumperClient.get<Group[]>('/v1/groups')
   if (response.status !== 200) throw new JumperBackendError(response)
   return response.data
 }
@@ -70,7 +70,7 @@ export const getGroups = async () => {
 export const isUserWithUsernameExist = async (
   username: string
 ): Promise<Boolean> =>
-  (await jumperClient.get(`/users/exists?username=${username}`)).data
+  (await jumperClient.get(`/v1/users/exists?username=${username}`)).data
 
 /**
  * Check if an user with the same email exist
@@ -78,7 +78,7 @@ export const isUserWithUsernameExist = async (
  * @returns True if an user with the same email exist, else False
  */
 export const isUserWithEmailExist = async (email: string): Promise<Boolean> =>
-  (await jumperClient.get(`/users/exists?email=${email}`)).data
+  (await jumperClient.get(`/v1/users/exists?email=${email}`)).data
 
 /**
  * Check if the user is the last admin.
@@ -86,7 +86,7 @@ export const isUserWithEmailExist = async (email: string): Promise<Boolean> =>
  * @returns True if the user is the last admin, else False.
  */
 export const isLastAdmin = async (userId: User['id']): Promise<boolean> => {
-  const response = await jumperClient.get(`/users/${userId}/is-last-admin`)
+  const response = await jumperClient.get(`/v1/users/${userId}/is-last-admin`)
   if (response.status !== 200) {
     throw new Error('Failed to check if user is last admin')
   }

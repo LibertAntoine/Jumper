@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteRecordName } from 'vue-router'
+import type { RouteLocationNormalized } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthUserStore, useAuthConfigStore } from '@/stores'
 
@@ -8,7 +8,7 @@ type pagePermission = (
 ) => boolean
 
 export const usePagePermissions = async (): Promise<{
-  [key: RouteRecordName]: pagePermission
+  [key: string]: pagePermission
 }> => {
   const authUserStore = useAuthUserStore()
   const { isAuthenticated, isSuperAdmin, isFetching } =
@@ -26,7 +26,6 @@ export const usePagePermissions = async (): Promise<{
     actions: () => isSuperAdmin.value,
     users: () => isSuperAdmin.value,
     roles: () => isSuperAdmin.value,
-    groups: () => isSuperAdmin.value && isScimEnabled.value,
-
+    groups: () => isSuperAdmin.value && isScimEnabled.value
   }
 }

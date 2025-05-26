@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import type { Order } from '@@types'
 import { Button } from '@@materials/ui/button'
-import { ChevronDown, ChevronUp } from 'lucide-vue-next'
+import { ChevronDown } from 'lucide-vue-next'
 
 const order = defineModel<Order>('order', {
   default: { field: '', direction: 'asc' }

@@ -5,7 +5,7 @@
         label
       }}</FormLabel>
       <FormControl>
-        <TagsInput>
+        <TagsInput :class="props.class">
           <div v-if="icon" class="relative w-6 max-w-sm items-center">
             <span
               class="absolute inset-y-0 start-0 flex items-center justify-center"
@@ -24,7 +24,7 @@
             <slot :item="item">
               <TagsInputItemText />
             </slot>
-            <TagsInputItemDelete @click="remove(i)" class="hover:bg-slate-200 transition-colors" />
+            <TagsInputItemDelete @click="remove(i)" class="hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" />
           </TagsInputItem>
           <ComboboxRoot
             v-model:open="open"
@@ -74,10 +74,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, type HTMLAttributes } from 'vue'
 import { Tags } from 'lucide-vue-next'
 import { useFieldArray } from 'vee-validate'
-import { CommandList, CommandEmpty } from '@@materials/ui/command'
+import { CommandList } from '@@materials/ui/command'
 import {
   TagsInput,
   TagsInputInput,
@@ -101,17 +101,17 @@ import {
   FormMessage
 } from '@@materials/ui/form'
 
-
 const props = withDefaults(
   defineProps<{
-    label: string
     fieldName: string
+    label?: string
     icon?: boolean
     create?: boolean
     placeholder?: string
     showErrorMessage?: boolean
     description?: string
     disableKeyEnter?: boolean
+    class?: HTMLAttributes['class']
   }>(),
   {
     icon: true,
@@ -125,6 +125,7 @@ const { remove, push, fields } = useFieldArray<any>(props.fieldName)
 const searchTerm = defineModel<string>('search-term')
 
 const addTag = (tag: any) => {
+  if (!tag) return
   push(tag)
   searchTerm.value = ''
 }

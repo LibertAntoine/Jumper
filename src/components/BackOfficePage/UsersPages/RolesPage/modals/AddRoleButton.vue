@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { Group, User } from '@@types'
+import { Group, User, Action } from '@@types'
 import { useRoleForm } from './useRoleForm'
 import jumper from '@/services/jumper'
 import { useToast } from '@@materials/ui/toast'
@@ -133,11 +133,19 @@ const {
 
 const onSubmit = roleForm.handleSubmit(async (values) => {
   try {
+    console.log('values', {
+      name: values.name,
+      description: values.description,
+      users: values.users?.map((user: User) => user.id),
+      groups: values.groups?.map((group: Group) => group.id),
+      actions: values.actions?.map((action: Action) => action.id)
+    })
     await jumper.roles.create({
       name: values.name,
       description: values.description,
       users: values.users?.map((user: User) => user.id),
-      groups: values.groups?.map((group: Group) => group.id)
+      groups: values.groups?.map((group: Group) => group.id),
+      actions: values.actions?.map((action: Action) => action.id)
     })
     emit('roleAdded')
   } catch (error) {

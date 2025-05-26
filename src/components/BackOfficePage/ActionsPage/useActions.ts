@@ -1,6 +1,6 @@
 import type { Action, DetailedAction } from '@@types'
 import jumper from '@/services/jumper'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useQuery } from '@/composables'
 
 export type ActionsComposable = ReturnType<typeof useActions>
@@ -28,12 +28,67 @@ export const useActions = () => {
     }
   )
 
+  const create = async (action: Partial<Action>) => {
+    const newAction = await jumper.actions.create(action)
+    selectedAction.value = newAction
+    actionsQuery.setData((prev) => {
+      if (!prev) return [newAction]
+      return [...prev, newAction]
+    })
+    return newAction
+  }
+
+  const update = async (
+    actionId: DetailedAction['id'],
+    action: Partial<DetailedAction>
+  ) => {
+    const updatedAction = await jumper.actions.update(actionId, action)
+    actionDetailedQuery.setData(() => updatedAction)
+    actionsQuery.refetch()
+    return updatedAction
+  }
+
+  const updateThumbnail = async (
+    actionId: DetailedAction['id'],
+    thumbnail: File
+  ) => {
+    const { thumbnailUrl } = await jumper.actions.updateActionThumbnail(
+      actionId,
+      thumbnail
+    )
+    actionDetailedQuery.setData((old) => {
+      if (!old) return null
+      return {
+        ...old,
+        thumbnailUrl
+      }
+    })
+    actionsQuery.refetch()
+    return thumbnailUrl
+  }
+
+  const remove = async (actionId: DetailedAction['id']) => {
+    await jumper.actions.remove(actionId)
+    await actionsQuery.refetch()
+    if (selectedAction.value?.id === actionId) {
+      if (actionsQuery.data.value?.length) {
+        selectedAction.value = actionsQuery.data.value[0]
+      } else {
+        selectedAction.value = null
+      }
+    }
+  }
+
   return {
-    actions: actionsQuery.data,
-    actionDetailed: actionDetailedQuery.data,
+    actions: computed(() => actionsQuery.data.value ?? null),
+    actionDetailed: computed(() => actionDetailedQuery.data.value ?? null),
     selectedAction,
     actionsQuery,
     actionDetailedQuery,
-    search
+    search,
+    create,
+    update,
+    updateThumbnail,
+    remove
   }
 }

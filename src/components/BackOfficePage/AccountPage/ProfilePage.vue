@@ -52,7 +52,6 @@
 </template>
 
 <script setup lang="ts">
-import Badge from '@@materials/ui/badge/Badge.vue'
 import Button from '@@materials/ui/button/Button.vue'
 import { useAuthUserForm } from './useUserForm'
 import { storeToRefs } from 'pinia'

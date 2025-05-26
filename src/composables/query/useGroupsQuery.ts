@@ -28,7 +28,7 @@ export const useGroupsQuery = (
     catchPageError(() => {
       if (options.searchNeeded && search.value === '')
         return Promise.resolve({ count: 0, results: [] })
-      return jumper.roles.getRoles({
+      return jumper.roles.getDetailedRoles({
         page: currentPage.value,
         limit: limit.value,
         search: debouncedSearch.value || undefined,

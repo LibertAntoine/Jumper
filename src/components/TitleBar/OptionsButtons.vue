@@ -17,6 +17,16 @@
           dark:text-slate-200 dark:group-hover:text-slate-100"
       />
     </button>
+    <button
+      class="group rounded-full p-[3px] transition-colors hover:bg-slate-200
+        dark:hover:bg-slate-800"
+      @click="openDebugWindow"
+    >
+      <Bug
+        class="h-[17px] w-[17px] text-slate-700 transition-colors group-hover:text-slate-900
+          dark:text-slate-200 dark:group-hover:text-slate-100"
+      />
+    </button>
     <component
       :is="router.currentRoute.value.name !== 'home' ? 'div' : 'RouterLink'"
       :to="{ name: 'settings' }"
@@ -42,14 +52,25 @@
 
 <script setup lang="ts">
 import { useDark, useToggle } from '@vueuse/core'
-import { useRouter, RouterLink } from 'vue-router'
-import { Cog, Sun } from 'lucide-vue-next'
+import { useRouter } from 'vue-router'
+import { Cog, Sun, Bug } from 'lucide-vue-next'
 import Moon from './Moon.vue'
+import { useDebugWindowStore } from '@/stores'
 
 const router = useRouter()
+const debugWindowStore = useDebugWindowStore()
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
 
 const isSettingDisabled = () => router.currentRoute.value.name !== 'home'
+
+const openDebugWindow = () => {
+      console.log('tyuty debug window')
+  if (debugWindowStore.isOpen) {
+    debugWindowStore.focus()
+  }
+
+  debugWindowStore.open()
+}
 </script>

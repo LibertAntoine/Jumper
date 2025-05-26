@@ -1,16 +1,18 @@
 <template>
   <FormField v-slot="{ value, handleChange }" :name="fieldName">
-    <FormItem class="flex flex-row items-start gap-x-2 space-y-0">
+    <FormItem class="flex flex-row items-start gap-x-1 space-y-0">
       <FormControl>
         <Checkbox
           :checked="value"
           @update:checked="handleChange"
-          :class="cn(' placeholder:text-sm mt-[1px]', props.class)"
+          :class="cn('mt-[1px] placeholder:text-sm', props.class)"
           :disabled="disabled"
         />
       </FormControl>
       <div class="space-y-1 leading-none">
-        <FormLabel v-if="label" class="ml-1 dark:text-slate-200">{{ label }}</FormLabel>
+        <FormLabel v-if="label" class="ml-1 dark:text-slate-200">{{
+          label
+        }}</FormLabel>
         <FormDescription v-if="description" class="ml-1 dark:text-slate-500">{{
           description
         }}</FormDescription>
@@ -37,8 +39,8 @@ import {
 
 const props = withDefaults(
   defineProps<{
-    label: string
     fieldName: string
+    label?: string
     class?: string
     showErrorMessage?: boolean
     description?: string

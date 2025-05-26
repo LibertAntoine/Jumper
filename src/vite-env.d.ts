@@ -6,3 +6,11 @@ declare module "*.vue" {
   const component: DefineComponent<{}, {}, any>;
   export default component;
 }
+
+declare module 'monaco-editor/esm/vs/editor/browser/config/tabFocus.js' {
+  export const TabFocus: {
+    getTabFocusMode(): boolean;
+    setTabFocusMode(focus: boolean): void;
+    onDidChangeTabFocus: import('monaco-editor').IEvent<boolean>;
+  };
+}

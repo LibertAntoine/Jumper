@@ -1,89 +1,83 @@
 <template>
-  <Combobox
-    :value="JSON.stringify(modelValue)"
-    @update:model-value="select"
-    by="label"
-  >
-    <ComboboxAnchor as-child>
-      <ComboboxTrigger as-child>
+  <Popover v-model:open="open" by="label">
+    <PopoverTrigger as-child  >
+      <Button
+        ref="triggerRef"
+        variant="outline"
+        role="combobox"
+        :class="cn('justify-between gap-0 pl-3 pr-2', props.class)"
+      >
+        <div class="flex flex-grow items-center gap-2 truncate text-start">
+          <slot name="selection" :item="selectedItem" :label="itemLabel">
+            <p class="mr-2">{{ itemLabel ?? placeholder }}</p>
+          </slot>
+        </div>
         <Button
-          variant="outline"
-          role="combobox"
-          :class="cn('justify-between gap-0 pl-3 pr-2', props.class)"
+          class="z-1000 h-4 w-4 shrink-0 rounded-full p-0 opacity-50 hover:bg-slate-300
+            hover:opacity-70"
+          v-if="modelValue && clear"
+          variant="ghost"
+          @click.stop="
+            () => {
+              modelValue = null
+            }
+          "
         >
-          <div class="flex flex-grow items-center gap-2 truncate text-start">
-            <slot name="selection" :item="selectedItem" :label="itemLabel">
-              {{ itemLabel ?? placeholder }}
-            </slot>
-          </div>
-
-          <Button
-            class="z-1000 h-4 w-4 shrink-0 rounded-full p-0 opacity-50 hover:bg-slate-300
-              hover:opacity-70"
-            v-if="modelValue && clear"
-            variant="ghost"
-            @click.stop="
-              () => {
-                modelValue = null
-              }
-            "
-          >
-            <X />
-          </Button>
-          <ChevronDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <X />
         </Button>
-      </ComboboxTrigger>
-    </ComboboxAnchor>
-    <ComboboxList>
-      <div class="relative w-full max-w-sm items-center" v-if="search">
-        <ComboboxInput
-          class="h-10 rounded-none border-0 border-b pl-9 focus-visible:ring-0"
-          placeholder="Search..."
-        />
-        <span
-          class="absolute inset-y-0 start-0 flex items-center justify-center px-3"
-        >
-          <Search class="size-4 text-muted-foreground" />
-        </span>
-      </div>
-      <ComboboxEmpty> Not found. </ComboboxEmpty>
-      <ComboboxGroup>
-        <ComboboxItem
-          v-for="[key, item] in comboItems.entries()"
-          :key="key"
-          :value="key"
-        >
-          <div class="flex flex-grow items-center gap-2 truncate text-start">
-            <slot name="list-item" :item="item" :label="getLabel(item)">
-              {{ getLabel(item) }}
-            </slot>
-          </div>
-          <ComboboxItemIndicator>
-            <Check :class="cn('ml-auto h-4 w-4')" />
-          </ComboboxItemIndicator>
-        </ComboboxItem>
-      </ComboboxGroup>
-    </ComboboxList>
-  </Combobox>
+        <ChevronDown class="h-4 w-4 shrink-0 opacity-50" />
+      </Button>
+    </PopoverTrigger>
+    <PopoverContent class="p-0 min-w-[50px]":style="{ width: `${width + 22}px` }">
+      <Command v-model:searchTerm="searchTerm" :class="cn(popEverClass)">
+        <CommandInput v-if="search" placeholder="Search..." class="h-9" />
+        <CommandEmpty class="flex flex-col items-center gap-2">
+          <p>No item found.</p>
+        </CommandEmpty>
+        <CommandList>
+          <CommandGroup>
+            <CommandItem
+              v-for="[key, item] in comboItems.entries()"
+              :key="key"
+              :value="key"
+              :class="cn(listItemClass)"
+              @select="select(key)"
+            >
+              <div
+                class="mr-auto flex flex-grow items-center gap-2 truncate text-start"
+              >
+                <slot name="list-item" :item="item" :label="getLabel(item)">
+                  {{ getLabel(item) }}
+                </slot>
+              </div>
+              <div class="w-[23px] flex-shrink-0" v-if="!props.disableCheck">
+                <Check v-if="selectedKey == key" class="ml-auto h-4 w-4" />
+              </div>
+            </CommandItem>
+            <slot name="end-list" :searchTerm="searchTerm" />
+          </CommandGroup>
+        </CommandList>
+      </Command>
+    </PopoverContent>
+  </Popover>
 </template>
 
 <script setup lang="ts" generic="T, U">
-import { computed, type HTMLAttributes } from 'vue'
+import { ref, computed, type HTMLAttributes } from 'vue'
 import { cn } from '@/services/utils'
-import { Button } from '@@materials/ui/button'
 import {
-  Combobox,
-  ComboboxAnchor,
-  ComboboxEmpty,
-  ComboboxGroup,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxItemIndicator,
-  ComboboxList,
-  ComboboxTrigger
-} from '@@materials/ui/combobox'
-import { Check, ChevronDown, Search, X } from 'lucide-vue-next'
-import { AcceptableValue } from 'reka-ui'
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '@@materials/ui/command'
+import { Button } from '@@materials/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '@@materials/ui/popover'
+import { Check, ChevronDown, X } from 'lucide-vue-next'
+import type { AcceptableValue } from 'reka-ui'
+import { useElementSize } from '@vueuse/core'
 
 const modelValue = defineModel<U | null>('modelValue')
 
@@ -94,6 +88,10 @@ const props = withDefaults(
     label?: keyof T | ((item: T) => AcceptableValue)
     placeholder?: string
     class?: HTMLAttributes['class']
+    listItemClass?: HTMLAttributes['class']
+    popEverClass?: HTMLAttributes['class']
+    selectLabel?: string
+    disableCheck?: boolean
     search?: boolean
     clear?: boolean
   }>(),
@@ -102,6 +100,12 @@ const props = withDefaults(
     label: (item: T) => (typeof item === 'string' ? item : JSON.stringify(item))
   }
 )
+
+const triggerRef = ref<HTMLElement | null>(null)
+const searchTerm = ref('')
+const open = ref(false)
+
+const { width } = useElementSize(triggerRef)
 
 const getLabel = (item: T) => {
   if (typeof props.label === 'function') return props.label(item)
@@ -123,6 +127,7 @@ const comboItems = computed(() => {
 })
 
 const select = (value: AcceptableValue) => {
+  open.value = false
   if (typeof value !== 'string') {
     modelValue.value = undefined
     return
@@ -134,6 +139,11 @@ const select = (value: AcceptableValue) => {
 const selectedItem = computed(() => {
   if (!modelValue.value) return undefined
   return comboItems.value.get(JSON.stringify(modelValue.value))
+})
+
+const selectedKey = computed(() => {
+  if (!selectedItem.value) return undefined
+  return JSON.stringify(getKey(selectedItem.value))
 })
 
 const itemLabel = computed(() => {

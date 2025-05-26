@@ -1,15 +1,17 @@
 <template>
-  <FormField v-slot="{ componentField }" :name="fieldName" >
+  <FormField v-slot="{ componentField }" :name="fieldName">
     <FormItem class="space-y-0">
-      <FormLabel v-if="label" class="ml-1 dark:text-slate-200">{{ label }}</FormLabel>
+      <FormLabel v-if="label" class="ml-1 dark:text-slate-200">{{
+        label
+      }}</FormLabel>
       <FormControl>
         <Input
           class="placeholder:text-sm"
-          v-bind="componentField"
-          :placeholder="placeholder"
-          :type="type"
+          v-bind="{
+            ...componentField,
+            ...$attrs
+          }"
           :class="cn('w-full', props.class)"
-          :disabled="disabled"
         />
       </FormControl>
       <FormDescription v-if="description" class="ml-1 dark:text-slate-500">{{
@@ -37,14 +39,11 @@ import {
 
 const props = withDefaults(
   defineProps<{
-    label: string
     fieldName: string
-    placeholder?: string
-    type?: string
+    label?: string
     class?: string
     showErrorMessage?: boolean
     description?: string
-    disabled?: boolean
   }>(),
   {
     showErrorMessage: true

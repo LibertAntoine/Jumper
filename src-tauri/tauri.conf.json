@@ -18,16 +18,40 @@
         "height": 680,
         "minHeight": 380,
         "minWidth": 330
+      },
+      {
+        "decorations": false,
+        "title": "Debug",
+        "label": "debug",
+        "url": "/debug",
+        "width": 700,
+        "height": 700,
+        "minHeight": 380,
+        "minWidth": 500,
+        "visible": false
       }
     ],
     "security": {
       "csp": null
     }
   },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDRDNDg2RUU2OTQxQzQwRTUKUldUbFFCeVU1bTVJVERmM3lUakhVQ2ZjaG1wa1VLR1lXM29aTVFkNnJjQi9yZmpyTFJ0TnY0V24K",
+      "endpoints": ["https://github.com/user/repo/releases/latest/download/latest.json"],
+      "windows": {
+        "installMode": "passive"
+      }
+    },
+    "tauri-plugin-shell": {
+      "scope": ["shell:allow-spawn"]
+    }
+  },
   "bundle": {
-    "externalBin": ["bin/python/test"],
+    "externalBin": ["bin/python/python"],
     "active": true,
     "targets": "all",
+    "createUpdaterArtifacts": true,
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

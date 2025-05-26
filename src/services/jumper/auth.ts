@@ -1,10 +1,10 @@
-import { jumperClient, JumperBackendError } from '@/services/jumper/client'
+import { jumperClient } from '@/services/jumper/client'
 import type { AuthConfig } from '@@types'
 
 const LOGIN_PAGE_PATH: string = '/login'
 
 export const login = async (email: string, password: string) => {
-  const response = await jumperClient.post('/auth', {
+  const response = await jumperClient.post('/v1/auth', {
     email,
     password
   })
@@ -15,10 +15,10 @@ export const login = async (email: string, password: string) => {
   return { error: null }
 }
 
-export const logout = async () => await jumperClient.post('/auth/logout')
+export const logout = async () => await jumperClient.post('/v1/auth/logout')
 
 export const getConfig = async (): Promise<AuthConfig> => {
-  const response = await jumperClient.get('/auth/config')
+  const response = await jumperClient.get('/v1/auth/config')
   if (response.status !== 200) {
     throw new Error('Failed to get auth config')
   }
@@ -26,7 +26,7 @@ export const getConfig = async (): Promise<AuthConfig> => {
 }
 
 export const isAuthenticated = async () => {
-  const response = await jumperClient.get('/auth/status')
+  const response = await jumperClient.get('/v1/auth/status')
   if (response.status !== 200) return false
   return response.data.authenticated
 }

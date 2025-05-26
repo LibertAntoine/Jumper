@@ -15,7 +15,7 @@
             <SelectItem
               v-for="item in items"
               :key="JSON.stringify(item)"
-              :value="getValue(item)"
+              :value="getValue(item) as string"
               >Admin
             </SelectItem>
           </SelectContent>
@@ -49,7 +49,7 @@ import {
   SelectValue
 } from '@@materials/ui/select'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     label: string
     fieldName: string

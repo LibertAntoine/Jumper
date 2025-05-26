@@ -8,7 +8,7 @@ export const getGroups = async (params: {
   ordering?: string
 }) => {
   const { page = 1, limit = 25, search, ordering } = params
-  const response = await jumperClient.get<Page<Group>>('/groups', {
+  const response = await jumperClient.get<Page<Group>>('/v1/groups', {
     params: { page, limit, search, ordering }
   })
   if (response.status !== 200) throw new JumperBackendError(response)

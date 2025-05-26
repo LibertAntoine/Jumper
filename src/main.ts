@@ -2,6 +2,7 @@ import './assets/index.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { VueQueryPlugin, type VueQueryPluginOptions } from '@tanstack/vue-query'
+import { PiniaSharedState } from 'pinia-shared-state'
 
 import App from './App.vue'
 
@@ -20,7 +21,14 @@ const vueQueryPluginOptions: VueQueryPluginOptions = {
 
 const app = createApp(App)
 
-app.use(createPinia())
+const pinia = createPinia()
+pinia.use(
+  PiniaSharedState({
+    enable: true,
+  }),
+)
+
+app.use(pinia)
 app.use(VueQueryPlugin, vueQueryPluginOptions)
 app.use(router)
 app.mount('#app')
