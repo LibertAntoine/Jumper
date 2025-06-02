@@ -28,7 +28,7 @@ export const useAuthConfigStore = defineStore('authConfig', () => {
     const authUrl =
       authConfig.value?.providers.find((provider) => provider.id === 'oidc')
         ?.authUrl ?? ''
-    return authUrl ? `http://localhost:8000/${authUrl}` : null
+    return authUrl ? `${jumper.client.jumperClient.defaults.baseURL}/v1${authUrl}?client=jumper` : null
   })
   const isSSOEnabled = computed(
     () => isOidcEnabled.value || isScimEnabled.value

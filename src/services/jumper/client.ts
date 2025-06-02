@@ -6,7 +6,8 @@ export const jumperClient = axios.create({
   baseURL: undefined,
   withCredentials: true,
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'X-Client-Agent': 'jumper-client'
   },
   validateStatus: Boolean
 })

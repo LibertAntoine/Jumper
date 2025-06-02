@@ -22,6 +22,7 @@ export const useAuthUserStore = defineStore('authUser', () => {
       }
       return authenticatedUser
     }
+    console.warn('User is not authenticated')
     return null
   }
 

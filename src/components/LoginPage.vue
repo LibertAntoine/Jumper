@@ -88,10 +88,7 @@
             </span>
           </div>
         </div>
-        <div
-          v-if="isOidcEnabled"
-          class="grid w-full max-w-sm items-center gap-1.5"
-        >
+        <div v-if="isOidcEnabled" class="grid w-full items-center gap-1.5">
           <Button
             id="oidc-login-button"
             size="sm"
@@ -124,6 +121,8 @@ import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useToast } from '@@materials/ui/toast'
 import jumper from '@/services/jumper'
+import { openUrl } from '@tauri-apps/plugin-opener'
+import { onOpenUrl } from '@tauri-apps/plugin-deep-link'
 
 import { useAuthConfigStore, useAuthUserStore } from '@/stores'
 import { useDark } from '@vueuse/core'
@@ -142,9 +141,27 @@ const { isEmailEnabled, isOidcEnabled, ssoDiplayName, oidcRedirectUrl } =
 const loggedUser = useAuthUserStore()
 const router = useRouter()
 
-const redirectToOidcProvider = () => {
+const redirectToOidcProvider = async () => {
   if (!oidcRedirectUrl.value) return
-  window.location.href = oidcRedirectUrl.value
+  openUrl(oidcRedirectUrl.value)
+  await onOpenUrl(async (urls) => {
+    if (urls.length === 0) return
+    const auth_url = new URL(urls[0])
+    if (auth_url.host != 'oidc-auth-callback') {
+      console.warn('Invalid deep link received:', urls[0])
+      return
+    }
+    const accessToken = auth_url.searchParams.get('access_token')
+    const refreshToken = auth_url.searchParams.get('refresh_token')
+    if (!accessToken || !refreshToken) {
+      console.warn('No access token or refresh token found in deep link')
+      return
+    }
+    await jumper.auth.setTokens(accessToken, refreshToken)
+    await loggedUser.refetch()
+    router.push({ name: 'home' })
+  })
+  // window.location.href = oidcRedirectUrl.value
 }
 
 const isBackendReachable = ref(

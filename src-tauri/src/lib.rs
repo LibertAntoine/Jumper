@@ -1,6 +1,7 @@
 use std::io::Write;
 use std::process::Command;
 use tempfile::NamedTempFile;
+use tauri_plugin_deep_link::DeepLinkExt;
 
 #[tauri::command]
 fn get_env_var(key: String) -> Option<String> {
@@ -52,6 +53,10 @@ async fn run_cmd_script(script: String) -> Result<String, String> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_single_instance::init(|_app, _argv, _cwd| {
+            // Handle when a second instance is launched (optional)
+        }))
+        .plugin(tauri_plugin_deep_link::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_fs::init())
         .plugin(
@@ -66,6 +71,11 @@ pub fn run() {
             run_cmd_script,
             get_env_var
         ])
+        .setup(|app| {
+            #[cfg(desktop)]
+            app.deep_link().register_all()?;
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

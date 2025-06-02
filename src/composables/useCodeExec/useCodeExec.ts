@@ -121,7 +121,6 @@ export const useCodeExec = (
       })
     })
     command.stderr.on('data', (data) => {
-      console.log(data.toString())
       pushLog({
         level: 'error',
         execId: commandId,

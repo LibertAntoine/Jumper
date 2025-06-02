@@ -133,13 +133,6 @@ const {
 
 const onSubmit = roleForm.handleSubmit(async (values) => {
   try {
-    console.log('values', {
-      name: values.name,
-      description: values.description,
-      users: values.users?.map((user: User) => user.id),
-      groups: values.groups?.map((group: Group) => group.id),
-      actions: values.actions?.map((action: Action) => action.id)
-    })
     await jumper.roles.create({
       name: values.name,
       description: values.description,

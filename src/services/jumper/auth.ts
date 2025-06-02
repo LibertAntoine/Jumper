@@ -15,6 +15,18 @@ export const login = async (email: string, password: string) => {
   return { error: null }
 }
 
+export const setTokens = async (access: string, refresh: string) => {
+  const response = await jumperClient.post('/v1/auth/set-tokens', {
+    access,
+    refresh
+  })
+  if (response.status !== 200) {
+    console.error('Failed to set tokens', response)
+    throw new Error('Failed to set tokens')
+  }
+  return { error: null }
+}
+
 export const logout = async () => await jumperClient.post('/v1/auth/logout')
 
 export const getConfig = async (): Promise<AuthConfig> => {
@@ -30,17 +42,6 @@ export const isAuthenticated = async () => {
   if (response.status !== 200) return false
   return response.data.authenticated
 }
-
-jumperClient.interceptors.request.use((config) => {
-  if (document.cookie.includes('csrftoken')) {
-    const csrftoken = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('csrftoken'))
-      ?.split('=')[1]
-    config.headers['X-CSRFToken'] = csrftoken
-  }
-  return config
-})
 
 jumperClient.interceptors.response.use((response) => {
   if (response.status === 401 && window.location.pathname !== LOGIN_PAGE_PATH ) {

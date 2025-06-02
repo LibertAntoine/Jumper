@@ -66,7 +66,6 @@ const toggleDark = useToggle(isDark)
 const isSettingDisabled = () => router.currentRoute.value.name !== 'home'
 
 const openDebugWindow = () => {
-      console.log('tyuty debug window')
   if (debugWindowStore.isOpen) {
     debugWindowStore.focus()
   }

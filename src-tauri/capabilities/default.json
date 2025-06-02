@@ -40,6 +40,7 @@
     "shell:allow-open",
     "shell:allow-kill",
     "opener:default",
+    "opener:allow-open-url",
     "core:window:default",
     "core:window:allow-start-dragging",
     "core:window:allow-close",
